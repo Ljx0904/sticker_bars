@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绿海贴吧</title>
+    <!--引入图标-->
+    <link rel="shortcut icon" href="../../images/xx.jpg">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../../plugins/element-ui/index.css" />
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            /*color: #e9e9eb;*/
+        }
+        .reg-content{
+            padding: 30px;
+            margin: 3px;
+        }
+        a, img {
+            border: 0;
+        }
+        html {
+
+        }
+        body {
+            text-align: center;
+            height: 700px;
+            width: 100%;
+            /* min-width: 1176px; */
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue,
+            Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+            margin: 0;
+            /*background-color: #409EFF;*/
+            background: url("../../images/login.jpg");
+
+            background-size: cover;
+            background-attachment: fixed;
+
+        }
+        .login{
+            margin: 200px 300px 400px 550px;
+            background-color:rgba(192,192,192,0.7);
+            width: 600px;
+            height: 400px;
+            border:solid #DCDFE6;
+            /*padding: 10px;*/
+            border:solid #DCDFE6;
+            border-radius: 40px;
+
+        }
+        .login-box{
+            
+            margin: 60px 30px 60px 100px;
+
+            width: 400px;
+            height: 200px;
+            /*margin: 200px 400px 400px 700px;*/
+            /*border:solid #DCDFE6;*/
+            border-radius: 6px;
+
+
+        }
+        .login-box-1 input{
+            /*float: right;*/
+            /*margin: 0 0 0 0;*/
+            height: 50px;
+            border-radius: 10px;
+            font-size: 15px;
+
+        }
+        .login-box-3{
+            margin: 50px 0 0 0;
+        }
+        #loginMsg{
+            text-align: center;
+            color: aliceblue;
+        }
+
+
+        .login-box-a{
+            float: left;
+            box-sizing: border-box;
+            left:0;
+            content: "\e608";
+        }
+        .enroll{
+            margin: 10px 0 0 0;
+            float: right;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<div class="login" id="login-app">
+    <div class="login-box">
+        <div class="login-box-1" id="loginMsg"><h1>LOGIN IN</h1></div>
+
+        <div class="enroll">
+           <span>没有账号？ </span> <a  href="../enroll/enroll.html"> 前去注册</a>
+        </div>
+
+
+        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" >
+            <div class="login-box-1 login-box-3">
+                <!--<span class="login-box-a">
+                    <i class="el-icon-user"></i>
+                </span>-->
+
+                <el-form-item prop="username">
+                    <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号" maxlength="20"
+                              prefix-icon="iconfont icon-user" />
+                </el-form-item>
+
+            </div>
+
+            <div class="login-box-1">
+                <el-form-item prop="password">
+                    <el-input v-model="loginForm.password" type="password" placeholder="密码" prefix-icon="iconfont icon-lock" maxlength="20"
+                              @keyup.enter.native="handleLogin" />
+                </el-form-item>
+            </div>
+
+
+            <div class="login-box-1">
+                <el-form-item style="width:100%;" >
+                    <el-button :loading="loading" class="login-btn" size="medium" type="primary" style="width:100%;"
+                               @click.native.prevent="handleLogin" round>
+                        <span v-if="!loading">登录</span>
+                        <span v-else>登录中...</span>
+                    </el-button>
+                </el-form-item>
+            </div>
+
+        </el-form>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="../../plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="../../plugins/axios/axios.min.js"></script>
+<script src="../../js/request.js"></script>
+<script src="../../js/validate.js"></script>
+<script src="../../js/login.js"></script>
+
+
+
+
+
+<script>
+    new Vue({
+        el:'#login-app',
+        data(){
+            return{
+                loginForm:{
+                    username:'',
+                    password:''
+                },
+                loading:false
+
+            }
+
+        },
+        computed: {
+            loginRules() {
+                const validateUsername = (rule, value, callback) => {
+                    if (value.length < 1 ) {
+                        callback(new Error('请输入用户名'))
+                    } else {
+                        callback()
+                    }
+                }
+                const validatePassword = (rule, value, callback) => {
+                    if (value.length < 6) {
+                        callback(new Error('密码必须在6位以上'))
+                    } else {
+                        callback()
+                    }
+                }
+                return {
+                    'username': [{ 'validator': validateUsername, 'trigger': 'blur' }],
+                    'password': [{ 'validator': validatePassword, 'trigger': 'blur' }]
+                }
+            }
+        },
+        created() {
+        },
+
+
+        methods:{
+            async handleLogin() {
+
+
+                this.$refs.loginForm.validate(async (valid) => {
+                    if (valid) {
+                        this.loading = true
+                         let res = await loginApi(this.loginForm)
+                        console.log(res);
+                        if (String(res.code) === '1') {
+                            localStorage.setItem('userInfo',JSON.stringify(res.data))
+                            console.log("成功")
+                            this.$message.success("登入成功")
+                            window.location.href= '../../index.html'
+                        } else {
+                            console.log("失败")
+                            this.$message.error(res.msg)
+                            this.loading = false
+                        }
+
+                        /*if (res==true){
+                            console.log("登入成功")
+                            this.$message.success("登入成功")
+                            this.loading = false
+                        }else {
+                            console.log("登入失败")
+                            this.$message.error("登入失败")
+                            this.loading = false
+                        }*/
+                    }
+                })
+            }
+
+        }
+
+    })
+
+
+</script>
+
+
+</body>
+</html>

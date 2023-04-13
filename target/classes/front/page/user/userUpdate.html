@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绿海贴吧</title>
+    <!--引入图标-->
+    <link rel="shortcut icon" href="../../images/xx.jpg">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../../plugins/element-ui/index.css"/>
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+        }
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+
+        /*#user-app{
+            width: 50%;
+        }*/
+        .user-app{
+            margin-left: 100px;
+            background-color: #FFFFFF;
+            width: 70%;
+            height: 750px;
+        }
+
+        .image{
+            margin: 50px 0 80px 120px;
+            width: 200px;
+            float: left;
+        }
+        .User-app-a{
+            width: 400px;
+            /*float: right;*/
+        }
+        .user{
+            margin-left: 200px;
+        }
+        .avatar-uploader{
+            margin-left: 70px;
+            position: relative;
+        }
+        .avatar-uploader p,.avatar-uploader i{
+            position: absolute;
+            left: 30px;
+            top:70px;
+            color: #FFFFFF;
+            /*width: 30px;*/
+            height: 30px;
+            font-size: 20px;
+        }
+        .avatar-uploader i{
+            left: 75px;
+        }
+        .avatar-uploader p{
+            top:90px;
+
+        }
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .subBox{
+            margin-top: 15px;
+            margin-left: 200px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+
+<div id="user-app" class="user-app">
+    <div class="user">
+    <el-form
+            ref="ruleForm"
+            :model="ruleForm"
+            :inline="true"
+            label-width="180px"
+            class="demo-ruleForm"
+    >
+        <div class="image">
+        <el-upload
+                class="avatar-uploader"
+                action="/common/upload"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :on-change="onChange"
+                ref="upload">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <i class="el-icon-camera"></i>
+                <p>修改我的头像</p>
+        </el-upload>
+        </div>
+        <div class="User-app-a">
+            <el-form-item
+                    label="用户名称:"
+                    prop="name"
+            >
+                <el-input
+                        v-model="ruleForm.name"
+                        placeholder="请输入用户名称"
+                        maxlength="20"
+                />
+            </el-form-item>
+
+            <el-form-item
+                    label="年龄:"
+                    prop="price"
+            >
+                <el-input
+                        v-model="ruleForm.age"
+                        placeholder="请输入年龄"
+                />
+            </el-form-item>
+            <el-form-item
+                    label="性别:"
+                    prop="sex"
+            >
+                <el-radio-group v-model="ruleForm.sex">
+                    <el-radio label="男"></el-radio>
+                    <el-radio label="女"></el-radio>
+                </el-radio-group>
+            </el-form-item>
+        </div>
+        <div class="address">
+            <el-form-item
+                    label="用户简介:"
+                    prop="region"
+            >
+                <el-input
+                        v-model="ruleForm.profile"
+                        type="textarea"
+                        :rows="3"
+                        placeholder="用户简介，最长100字"
+                        maxlength="200"
+                />
+            </el-form-item>
+        </div>
+        <div class="subBox">
+            <el-form-item>
+
+                <el-button
+                        type="primary"
+                        @click="submitForm()"
+                >
+                    保存
+                </el-button>
+                <el-button @click="goBack()">
+                    取消
+                </el-button>
+
+            </el-form-item>
+        </div>
+    </el-form>
+    </div>
+</div>
+</body>
+
+
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="../../plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="../../plugins/axios/axios.min.js"></script>
+<script src="../../js/request.js"></script>
+<script src="../../js/user.js"></script>
+
+
+<script>
+    new Vue({
+        el: "#user-app",
+        data() {
+            return {
+                imageUrl: '',
+                ruleForm: {
+                    'image': '',
+                    'name': '',
+                    'id': ' ',
+                    'age': '',
+                    'sex': '',
+                    'profile': '',
+                    // 'dishFlavors': [],
+                    /*'status': true,*/
+                },
+            };
+        },
+        created() {
+            var user = JSON.parse(localStorage.getItem('userInfo'))
+            console.info(user)
+            this.ruleForm = user
+            this.imageUrl = `/common/download?name=${user.image}`
+        },
+        methods: {
+            handleAvatarSuccess(response, file, fileList) {
+                // 拼接down接口预览
+                if (response.code === 0 && response.msg === '未登录') {
+                    window.top.location.href = '../../page/login/login.html'
+                } else {
+
+                    this.imageUrl = `/common/download?name=${response.data}`
+                    this.ruleForm.image = response.data
+                }
+            },
+            onChange(file) {
+                if (file) {
+                    const suffix = file.name.split('.')[1]
+                    const size = file.size / 1024 / 1024 < 2
+                    if (['png', 'jpeg', 'jpg'].indexOf(suffix) < 0) {
+                        this.$message.error('上传图片只支持 png、jpeg、jpg 格式！')
+                        this.$refs.upload.clearFiles()
+                        return false
+                    }
+                    if (!size) {
+                        this.$message.error('上传文件大小不能超过 2MB!')
+                        return false
+                    }
+                    return file
+                }
+            },
+
+
+            submitForm() {
+                // console.info(this.ruleForm)
+                let params = {...this.ruleForm}
+                // console.info(params)
+                /*params.flavors = this.dishFlavors.map(obj => ({ ...obj, value: JSON.stringify(obj.value) }))*/
+                delete params.dishFlavors
+                editUser(params).then(res => {
+                    if (res.code === 1) {
+                        this.$message.success('信息修改成功！')
+                        localStorage.setItem('userInfo', JSON.stringify(res.data))
+                        // location.replace('http://localhost:8080/front/index.html')
+                        // location.reload();
+                        parent.location.reload();
+                        // this.goBack()
+                    } else {
+                        this.$message.error(res.msg || '操作失败')
+                    }
+                }).catch(err => {
+                    this.$message.error('请求出错了：' + err)
+                })
+            },
+            goBack() {
+                // console.log("-*-*-*-")
+                /*window.parent.menuHandle({
+                    id: '2',
+                    url: 'page/forum/forum.html?id=2',
+                    name: '首页'
+                }, false)*/
+                parent.location.reload();
+            },
+            checkOption(val, ind, index) {
+                this.selectHandle(val.name, index, ind)
+                this.dishFlavors[index].name = val.name
+            },
+            outSelect(st, index) {
+                const _this = this
+                setTimeout(() => {
+                    const obj = JSON.parse(JSON.stringify(_this.dishFlavors[index]))
+                    obj.showOption = st
+                    _this.dishFlavors.splice(index, 1, obj)
+                }, 200)
+            },
+
+            selectHandle(val, key, ind) {
+                const arrDate = [...this.dishFlavors]
+                arrDate[key] = JSON.parse(JSON.stringify(this.dishFlavorsData[ind]))
+                this.dishFlavors = arrDate
+            },
+
+        }
+    })
+</script>
+
+</html>

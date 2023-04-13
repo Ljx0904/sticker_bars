@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>校谈</title>
+    <!--引入图标-->
+    <link rel="shortcut icon" href="../../images/xx.jpg">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../../plugins/element-ui/index.css" />
+
+    <style>
+
+        html{
+
+            float: right;
+
+            /*width: 500px;*/
+        }
+        .dashboard-container{
+            width: 1350px;
+            height: 100%;
+        }
+        .container{
+            margin: 50px 0 0 0;
+            width: 1300px;
+            height: 400px;
+            background-color: #FFFFFF;
+
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container" id="member-app">
+    <div class="container">
+        <div class="tableBar">
+            <el-input
+                    v-model="input"
+                    placeholder="请输入员工姓名"
+                    style="width: 250px"
+                    clearable
+                    @keyup.enter.native="handleQuery"
+            >
+                <i
+                        slot="prefix"
+                        class="el-input__icon el-icon-search"
+                        style="cursor: pointer"
+                        @click="handleQuery"
+                ></i>
+            </el-input>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="../../plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="../../plugins/axios/axios.min.js"></script>
+<script src="../../js/request.js"></script>
+
+<script>
+    new Vue({
+        el:"#member-app",
+        data(){
+            return{
+                input:''
+
+            }
+
+        },
+        /*//钩子函数
+        created() {
+            this.init()
+            this.user = JSON.parse(localStorage.getItem('userInfo')).username
+        },
+        methods:{
+            handleQuery(){
+                console.log(this.input)
+            },
+            async init(){
+                await getPostList()
+            }
+        }*/
+
+    })
+
+
+</script>
+
+</body>
+</html>

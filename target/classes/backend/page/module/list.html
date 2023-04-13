@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!--引入图标-->
+    <link rel="shortcut icon" href="../../images/xx.jpg">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../../../front/plugins/element-ui/index.css"/>
+    <link rel="stylesheet" href="../../../front/styles/common.css"/>
+    <link rel="stylesheet" href="../../../front/styles/page.css"/>
+    <style>
+        html{
+            overflow: hidden;
+        }
+        .module-app{
+            padding: 20px;
+        }
+        .tableBar{
+            /*display: flex;*/
+            margin-bottom: 20px;
+            justify-content: space-between;
+        }
+        .container {
+            background-color: #FFFFFF;
+            position: relative;
+            z-index: 1;
+            padding: 30px 28px;
+            border-radius: 4px;
+        }
+        .button{
+            float: right;
+        }
+        .el-message-box {
+            margin-bottom: 700px;
+        }
+        .tableBox {
+            width: 100%;
+            border: solid 2px #f3f4f7;
+            border-radius: 2px;
+
+        }
+    </style>
+</head>
+<body>
+
+<div id="module-app" class="module-app">
+    <div class="container">
+        <div class="tableBar">
+            <el-button
+                    type="primary"
+                    @click="addClass('add')"
+                    class="button"
+            >
+                + 新增模块
+            </el-button>
+        </div>
+        <el-table
+                :data="tableData"
+                stripe
+                class="tableBox"
+        >
+            <el-table-column
+                    prop="name"
+                    label="模块名称"
+            ></el-table-column>
+            <el-table-column
+                    prop="profile"
+                    label="模块简介"
+            ></el-table-column>
+            <el-table-column
+                    prop="updateTime"
+                    label="操作时间"
+            ></el-table-column>
+            <el-table-column
+                    prop="sort"
+                    label="排序"
+            ></el-table-column>
+
+            <el-table-column
+                    label="操作"
+                    width="160"
+                    align="center"
+            >
+                <template slot-scope="scope">
+                    <el-button
+                            type="text"
+                            size="small"
+                            class="blueBug"
+                            @click="editHandle(scope.row)"
+                            :class="{notAdmin:user !== 'admin'}"
+                    >
+                        编辑
+                    </el-button>
+
+                    <el-button
+                            type="text"
+                            size="small"
+                            class="delete"
+                            @click="deleteHandle(scope.row.id)"
+                            :class="{notAdmin:user !== 'admin'}"
+                    >
+                        删除
+                    </el-button>
+
+                    <!--<el-button
+                            type="text"
+                            size="small"
+                            class="delBut non"
+                            @click="statusHandle(scope.row)"
+                            v-if="user === 'admin'"
+                    >
+                        {{ scope.row.status == '1' ? '禁用' : '启用' }}
+                    </el-button>-->
+                </template>
+
+            </el-table-column>
+        </el-table>
+        <el-pagination
+                class="pageList"
+                :page-sizes="[5,10]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="counts"
+                :current-page.sync="page"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+        ></el-pagination>
+    </div>
+    <!--            :title="classData.title"-->
+    <el-dialog
+            :title="classData.title"
+            :visible.sync="classData.dialogVisible"
+            width="30%"
+            :before-close="handleClose"
+    >
+        <el-form
+                class="demo-form-inline"
+                label-width="100px"
+        >
+            <el-form-item label="模块名称：">
+                <el-input
+                        v-model="classData.name"
+                        placeholder="请输入模块名称"
+                        maxlength="14"
+                />
+            </el-form-item>
+            <el-form-item label="模块简介：">
+                <el-input
+                        v-model="classData.profile"
+                        placeholder="请输入模块简介"
+                        maxlength="14"
+                />
+            </el-form-item>
+
+            <el-form-item label="排序：">
+                <el-input v-model="classData.sort"  type="number" placeholder="请输入排序" />
+            </el-form-item>
+        </el-form>
+        <span
+                slot="footer"
+                class="dialog-footer"
+        >
+        <el-button
+                size="medium"
+                @click="classData.dialogVisible = false"
+        >取 消</el-button>
+        <el-button
+                type="primary"
+                size="medium"
+                @click="submitForm()"
+        >确 定</el-button>
+        <el-button
+                v-if="action != 'edit'"
+                type="primary"
+                size="medium"
+                class="continue"
+                @click="submitForm('go')"
+        > 保存并继续添加 </el-button>
+      </span>
+    </el-dialog>
+
+
+</div>
+
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="../../../front/plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../../front/plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="../../../front/plugins/axios/axios.min.js"></script>
+<script src="../../js/request.js"></script>
+<script src="../../js/module.js"></script>
+
+
+<script>
+    new Vue({
+        el:'#module-app',
+        data(){
+            return {
+                //数据
+                tableData: [],
+                //是否禁用
+                status: '',
+                //总数居数量
+                counts: 0,
+                //当前页数
+                page: 1,
+                //每页最多可展示数量
+                pageSize: 5,
+                //id
+                id: '',
+                //登入用户
+                user: '',
+                classData:{
+                    'title': '添加模块',
+                    'dialogVisible': false,
+                    'categoryId': '',
+                    'name': '',
+                    'profile':'',
+                    sort: ''
+                },
+                action:'',
+
+            }
+        },
+        created() {
+            this.init()
+            this.user = JSON.parse(localStorage.getItem('userInfos')).username
+        },
+
+        methods:{
+            async  submitForm(st) {
+                const classData = this.classData
+                const valid = (classData.name === 0 ||classData.name)  && (classData.sort === 0 || classData.sort)&&(classData.profile === 0 || classData.profile)
+                if (this.action === 'add') {
+                    if (valid) {
+                        const reg = /^\d+$/
+                        if (reg.test(classData.sort)) {
+                            await  addModule({'name': classData.name,'profile':classData.profile, sort: classData.sort}).then(res => {
+                                console.log(res)
+                                if (res.code === 1) {
+                                    this.$message.success('模块添加成功！')
+                                    if (!st) {
+                                        this.classData.dialogVisible = false
+                                    } else {
+                                        this.classData.name = ''
+                                        this.classData.profile = ''
+                                        this.classData.sort = ''
+                                    }
+                                    this.handleQuery()
+                                } else {
+                                    this.$message.error(res.msg || '操作失败')
+                                }
+                            }).catch(err => {
+                                this.$message.error('请求出错了：' + err)
+                            })
+                        } else {
+                            this.$message.error('排序只能输入数字类型')
+                        }
+
+                    } else {
+                        this.$message.error('请输入模块名称或排序或模块简介')
+                    }
+                } else if (valid) {
+                    const reg = /^\d+$/
+                    if (reg.test(this.classData.sort)) {
+                        await editModule({'id':this.classData.id,'name': this.classData.name, 'profile':classData.profile,sort: this.classData.sort}).then(res => {
+                            if (res.code === 1) {
+                                this.$message.success('模块修改成功！')
+                                this.classData.dialogVisible = false
+                                this.handleQuery()
+                            } else {
+                                this.$message.error(res.msg || '操作失败')
+                            }
+                        }).catch(err => {
+                            this.$message.error('请求出错了：' + err)
+                        })
+                    } else {
+                        this.$message.error('排序只能输入数字类型')
+                    }
+                } else {
+                    this.$message.error('请输入分类名称或排序')
+                }
+            },
+
+            handleClose(st) {
+                this.classData.dialogVisible = false
+            },
+
+            handleQuery() {
+                this.page = 1;
+                this.init();
+            },
+            //新增模块
+            addClass(st) {
+                this.classData.title = '新增模块'
+                this.action = 'add'
+                this.classData.name = ''
+                this.classData.sort = ''
+                this.classData.profile = ''
+                this.classData.dialogVisible = true
+            },
+            //修改模块
+            editHandle(dat) {
+                this.classData.title = '修改模块'
+                this.action = 'edit'
+                this.classData.name = dat.name
+                this.classData.sort = dat.sort
+                this.classData.id = dat.id
+                this.classData.profile=dat.profile
+                this.classData.dialogVisible = true
+            },
+            //删除模块
+              deleteHandle(id){
+                this.$confirm('此操作将永久删除该模块, 是否继续?', '提示', {
+                    'confirmButtonText': '确定',
+                    'cancelButtonText': '取消',
+                    'type': 'warning'
+                }).then(() => {
+                     deleModule(id).then(res => {
+                        if (res.code === 1) {
+                            this.$message.success('删除成功！')
+                            this.handleQuery()
+                        } else {
+                            this.$message.error(res.msg || '操作失败')
+                        }
+                    }).catch(err => {
+                        this.$message.error('请求出错了：' + err)
+                    })
+                })
+            },
+            async init() {
+                const params = {
+                    page: this.page,
+                    pageSize: this.pageSize,
+                    name: this.input ? this.input : undefined
+                }
+                await getModuleListPage(params).then(res => {
+                    if (String(res.code) === '1') {
+                        this.tableData = res.data.records || []
+                        this.counts = res.data.total
+                    }
+                }).catch(err => {
+                    this.$message.error('请求出错了：' + err)
+                })
+            },
+            handleSizeChange(val) {
+                this.pageSize = val
+                this.init()
+            },
+            handleCurrentChange(val) {
+                this.page = val
+                this.init()
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

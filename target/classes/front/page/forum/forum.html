@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绿海贴吧</title>
+    <!--引入图标-->
+    <link rel="shortcut icon" href="../../images/xx.jpg">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../../plugins/element-ui/index.css"/>
+    <style>
+        .hhh {
+            height: 50px;
+            /*height: 200%;*/
+            /*background-color: black;*/
+            /*height: 600px;*/
+        }
+
+        html body {
+            width: 88%;
+            height: 100%;
+            /*height: 300%;*/
+            /*height:500px;*/
+            /*background-color: black;*/
+        }
+
+        .text {
+            font-size: 14px;
+        }
+
+        .item {
+            margin-bottom: 18px;
+            /*width: 45%;*/
+            /*margin: 10px;*/
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+        .clearfix {
+            color: #2d64b3;
+            cursor: pointer;
+            height: 10px;
+            /*line-height: 10px*/
+            font-size: 25px;
+            /*font-weight: bold;*/
+            margin-bottom: 5px;
+            font-weight: lighter;
+            text-decoration: none;
+
+        }
+
+        .box-card {
+            width: 80%;
+        }
+
+        .pagination {
+            height: 50px;
+            width: 100%;
+            margin-bottom: 100px;
+        }
+
+        .pageList {
+        }
+
+        .time {
+            font-size: 3px;
+            color: #909399;
+            margin-top: 20px;
+        }
+        .content-a{
+            width:500px;
+        }
+        .content-b{
+            color: #909399;
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+            font-size: 20px;
+            font-weight: lighter;
+        }
+        .el-card__body {
+            padding: 0px 20px 20px 20px;
+        }
+        .tem{
+            width: 80%;
+            position: sticky;
+            position: -webkit-sticky;
+            /*width: 70.5%;*/
+            top: 0px;
+            z-index: 100;
+            font-family: LiSu;
+        }
+        /*el-tab-pane{
+            width: 100px;
+            font-size:20px;
+            height: 50px;
+        }*/
+
+        .el-tabs--border-card>.el-tabs__header .el-tabs__item {
+            -webkit-transition: all .3s cubic-bezier(.645,.045,.355,1);
+            transition: all .3s cubic-bezier(.645,.045,.355,1);
+            border: 1px solid transparent;
+            margin-top: -1px;
+            color: #909399;
+            font-size: 20px;
+            font-weight: lighter;
+        }
+        .el-tabs--border-card>.el-tabs__content {
+             padding: 0px;
+        }
+        .button-app{
+            width: 100px;
+            height: 40px;
+            float: right;
+        }
+        .el-tabs--border-card {
+            background: #FFF;
+            border: 1px solid #DCDFE6;
+           /* -webkit-box-shadow: 0 2px 4px 0 rgb(0 0 0 / 12%), 0 0 6px 0 rgb(0 0 0 / 4%);
+            box-shadow: 0 2px 4px 0 rgb(0 0 0 / 12%), 0 0 6px 0 rgb(0 0 0 / 4%);*/
+            width:100%;
+        }
+        .AJ{
+            /*background-color: #3a8ee6;*/
+            background-color: #FFFFFF;
+            float: right;
+            position: fixed;
+            left: 1010px;
+            top: 100px;
+            width: 54px;
+            height: 170px;
+
+        }
+        .Nr{
+            margin-top: 1px;
+        }
+        .border-card{
+            margin-top: 50px;
+        }
+        .add-jpg{
+            margin-top: 20px;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            margin-left: 4px;
+            border-radius: 50px;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div id="posts-app" class="border-card">
+    <div class="AJ">
+<!--        <i class="el-icon-circle-plus" style=""></i>-->
+        <el-tooltip class="item" effect="dark" content="发帖" placement="right-start" >
+        <img src="../../images/add.jpg" class="add-jpg" @click="upload()">
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="刷新" placement="right-start">
+        <img src="../../images/Sx.jpg" class="add-jpg" onclick="javascript:location.reload()">
+        </el-tooltip>
+<!--    <button type="button"   ></button>-->
+    </div>
+    <!--<el-empty :image-size="200"></el-empty>-->
+    <div class="tem">
+
+        <!--<div class="button-app" @click="upload()">
+            <el-button type="activeName">上传<i class="el-icon-upload el-icon&#45;&#45;right"></i></el-button>
+        </div>-->
+
+        <el-tabs v-model="classifyName" type="border-card"  @tab-click="handleClick"  text-color="#A9A9A9"
+                 active-text-color="#6495ED">
+
+
+            <el-tab-pane label="全部" name="0"></el-tab-pane>
+            <el-tab-pane
+                    v-for="(item,index) in classifyS"
+                    :key="index"
+                    :label="item.name"
+                    :name="item.id"
+                    lazy
+                    @tab-click="handleClick(item)">
+
+            </el-tab-pane>
+
+        </el-tabs>
+
+
+    </div>
+
+    <div class="Nr">
+    <el-card class="box-card" v-for="o in tableData.length" :key="o">
+        <!--<el-image :src="this.getImage(image)">
+        </el-image>-->
+
+        <div slot="header" class="clearfix" @click="addMemberHandle(tableData[o-1].id)">
+            <span>{{tableData[o - 1].name}}</span>
+        </div>
+
+        <p class="content-b">{{tableData[o - 1].content}}</p>
+
+        <div v-if="tableData[o - 1].image"class="content-a">
+            <el-image style="width: auto; height: 130px; border:none;cursor: pointer;"
+                      :src="getImage(tableData[o-1].image)"
+                      :preview-src-list="[ `/common/download?name=${tableData[o-1].image}`]" >
+                <div slot="error" class="image-slot">
+                    <!--<img src="./../../images/noImg.png"  style="width: auto; height: 40px; border:none;" >-->
+                </div>
+            </el-image>
+        </div>
+
+
+
+
+        <div class="time">
+            <i class="el-icon-user"></i>
+            <el-button style="color:#909399; padding: 3px 0" type="text" @click="User(tableData[o-1].employeeId)">{{tableData[o-1].createUser}}</el-button>
+<!--            <span>{{kong}}</span>-->
+
+            <i class="el-icon-time"></i>
+            <span>{{tableData[o - 1].createTime}}</span>
+            <el-button style="float: right; padding: 3px 0" type="text" @click="addMemberHandle(tableData[o-1].id)">
+                查看详情
+            </el-button>
+        </div>
+        <!--<div v-for="o in 4" :key="o" class="text item">
+            {{'列表内容 ' + o }}
+        </div>-->
+    </el-card>
+    </div>
+
+
+    <div class="pagination">
+        <el-pagination
+                class="pageList"
+                background
+                layout="prev, pager, next"
+                :total="counts"
+                :current-page.sync="page"
+                @current-change="handleCurrentChange"
+        >
+
+        </el-pagination>
+
+    </div>
+
+
+
+    <div class="hhh"></div>
+
+
+</div>
+
+<!--开发环境版本，包含了有帮助的命令行警告-->
+<script src="../../plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="../../plugins/axios/axios.min.js"></script>
+<script src="../../js/request.js"></script>
+<script src="../../js/forum.js"></script>
+<script src="../../js/classify.js"></script>
+
+<script>
+    new Vue({
+        el: "#posts-app",
+        // props:["classifyS"],
+        data() {
+            return {
+                activeName: 'first',
+                // name:'123',
+                page: 1,
+                pageSize: 10,
+                tableData: [],
+                counts: 10,
+                img: '../../../common/download?name=f625b0fa-8a29-42dd-ab64-e56cbf2d9999.jpg',
+                image: 'f625b0fa-8a29-42dd-ab64-e56cbf2d9999.jpg',
+                /*currentDate:[]*/
+                kong:' ',
+                userId:[],
+                menuId:0,
+                classifyId:0,
+                classifyS: [],
+                classifyName:'0'
+            }
+        },
+        //钩子函数
+        created() {
+            let menuId = window.parent.document.getElementById("zhi").value;
+            console.info(menuId)
+            this.page=1;
+            /*this.getByUserId(menuId);*/
+            this.menuId=menuId
+            this.init();
+            this.classify();
+            // this.user = JSON.parse(localStorage.getItem('userInfo')).username
+        },
+        mounted() {
+            // 切换页面时滚动条自动滚动到顶部
+            this.page=1;
+            window.scrollTo(0,0);
+        },
+
+        methods: {
+            async classify(){
+                console.info(this.menuId)
+                var moduleId=this.menuId;
+                await getClassifyList(moduleId).then(res => {
+                    if (String(res.code) === '1') {
+                        this.classifyS = res.data|| [];
+                    }
+                })
+            },
+
+            handleClick(tab,event) {
+                console.info(tab._props.name)
+                this.classifyId=tab._props.name;
+                this.page=1;
+                this.init();
+            },
+            getImage(image) {
+                // console.log(image)
+                return `/common/download?name=${image}`
+            },
+            handleQuery() {
+                this.page = 1;
+                this.init();
+            },
+            async init() {
+                const params = {
+                    page: this.page,
+                    pageSize: this.pageSize,
+                    module: this.menuId,
+                    classifyId:this.classifyId,
+                    /*name: this.input ? this.input : undefined*/
+                }
+                await getPostList(params).then(res => {
+                    if (String(res.code) === '1') {
+                        this.tableData = res.data.records || [];
+                        this.counts = parseInt(res.data.total)
+                        this.counts = (this.counts / this.pageSize * 10)
+                    }
+                })
+            },
+            handleCurrentChange(val) {
+                this.page = val
+                console.log(val)
+                this.init()
+                window.scrollTo(0,0);
+            },
+            /*time(){
+                for (let i = 0; i <this.tableData.length; i++) {
+                    this.currentDate[i]=new Date(parseInt(this.tableData[i].time));
+                }
+
+            },*/
+            addMemberHandle(data) {
+                window.parent.menuHandle({
+                    id: this.menuId,
+                    url: '/front/page/forum/show.html?id='+data,
+                    name: '详细信息',
+                    // name:data.name,
+                    /*data: data*/
+                }, true)
+
+            },
+            User(id){
+                window.parent.menuHandle({
+                    id: this.menuId,
+                    url: '/front/page/user/user.html?id='+id,
+                    name: '个人资料'
+                },true)
+            },
+            upload() {
+                window.parent.menuHandle({
+                    id: this.menuId,
+                    url: '/front/page/forum/add.html',
+                    name: '我要发稿',
+                }, true)
+            }
+
+        }
+    })
+</script>
+
+</body>
+</html>

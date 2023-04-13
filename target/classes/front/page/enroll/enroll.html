@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>绿海贴吧</title>
+    <!--引入图标-->
+    <link rel="shortcut icon" href="../../images/xx.jpg">
+
+    <link rel="stylesheet" href="../../plugins/element-ui/index.css" />
+    <style>
+        html{
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            list-style-type: none;
+
+
+        }
+        body{
+            text-align: center;
+            background: url("../../images/enroll2.jpg");
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        .enroll{
+            margin: 200px 300px 400px 550px;
+            background-color:rgba(192,192,192,0.7);
+            width: 600px;
+            height: 400px;
+            border:solid #DCDFE6;
+            /*padding: 10px;*/
+            border:solid #DCDFE6;
+            border-radius: 40px;
+
+        }
+        .enroll-bxo{
+            margin: 60px 30px 60px 100px;
+            width: 400px;
+            height: 200px;
+            border-radius: 6px;
+        }
+        .enroll-box-1{
+            height: 50px;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+        .enroll-box-1 input{
+            /*float: right;*/
+            /*margin: 0 0 0 0;*/
+            height: 50px;
+            border-radius: 10px;
+            font-size: 15px;
+
+        }
+
+        .enroll-box-3{
+            margin: 40px 0 20px 0;
+        }
+
+        #enrollMsg{
+            text-align: center;
+            color: aliceblue;
+        }
+        .enroll-bxo-4{
+            margin: 30px 0;
+        }
+        .login{
+            float: right;
+        }
+
+    </style>
+</head>
+<body>
+
+
+
+<div id="enroll-app"class="enroll">
+    <div class="enroll-bxo">
+        <div class="enroll-box-1" id="enrollMsg">
+            <h1>欢迎注册</h1>
+        </div>
+        <div class="login">
+            <span>已有帐号？</span> <a href="../login/login.html">前去登录</a>
+        </div>
+
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" >
+        <div class="enroll-box-1 enroll-box-3">
+            <el-form-item prop="username">
+                <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号" maxlength="20"
+                          prefix-icon="iconfont icon-user" />
+            </el-form-item>
+
+        </div>
+
+        <div class="enroll-box-1">
+            <el-form-item prop="password">
+                <el-input v-model="loginForm.password" type="password" placeholder="密码" prefix-icon="iconfont icon-lock" maxlength="20"
+                          @keyup.enter.native="handleLogin" />
+            </el-form-item>
+        </div>
+
+
+        <div class="enroll-box-1 enroll-bxo-4">
+            <el-form-item style="width:100%;" >
+                <el-button :loading="loading" class="login-btn" size="medium" type="primary" style="width:100%;"
+                           @click.native.prevent="handleLogin" round>
+                    <span v-if="!loading">注册</span>
+                    <span v-else>注册中...</span>
+                </el-button>
+            </el-form-item>
+        </div>
+
+    </el-form>
+    </div>
+
+
+
+</div>
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="../../plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="../../plugins/axios/axios.min.js"></script>
+<script src="../../js/request.js"></script>
+<script src="../../js/enroll.js"></script>
+<script>
+    new Vue({
+        el:"#enroll-app",
+        data(){
+            return{
+                loginForm:{
+                    username:'',
+                    password:''
+                },
+                loading:false
+
+            }
+        },
+        computed: {
+            loginRules() {
+                const validateUsername = (rule, value, callback) => {
+                    if (value.length < 1 ) {
+                        callback(new Error('请输入用户名'))
+                    } else {
+                        callback()
+                    }
+                }
+                const validatePassword = (rule, value, callback) => {
+                    if (value.length < 6) {
+                        callback(new Error('密码必须在6位以上'))
+                    } else {
+                        callback()
+                    }
+                }
+                return {
+                    'username': [{ 'validator': validateUsername, 'trigger': 'blur' }],
+                    'password': [{ 'validator': validatePassword, 'trigger': 'blur' }]
+                }
+            }
+        },
+        methods:{
+            async handleLogin(){
+                this.$refs.loginForm.validate(async (valid) => {
+                    if (valid) {
+                        this.loading = true
+
+                        let res = await enrollApi(this.loginForm)
+                        console.log(res);
+                        if (String(res.code) === '1') {
+                            // localStorage.setItem('userInfo',JSON.stringify(res.data))
+                            console.log("成功")
+                            /*this.$message.success({
+                                showClose: true,
+                                message: "注册成功"
+                                });*/
+                            alert("注册成功,前去登入")
+                            window.location.href= '../../page/login/login.html'
+                        } else {
+                            console.log("注册失败")
+                            this.$message.error(res.msg)
+                            this.loading = false
+                        }
+
+                        /*if (res==true){
+                            console.log("登入成功")
+                            this.$message.success("登入成功")
+                            this.loading = false
+                        }else {
+                            console.log("登入失败")
+                            this.$message.error("登入失败")
+                            this.loading = false
+                        }*/
+                    }
+                })
+
+            }
+
+        }
+    })
+</script>
+
+
+</body>
+</html>

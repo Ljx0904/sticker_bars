@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绿海贴吧</title>
+    <link rel="shortcut icon" href="images/xx.jpg">
+    <link rel="stylesheet" href="plugins/element-ui/index.css"/>
+    <!--    <link rel="stylesheet" href="styles/common.css" />-->
+    <!--    <link rel="stylesheet" href="styles/index.css" />-->
+    <!--    <link rel="stylesheet" href="styles/icon/iconfont.css" />-->
+
+    <style>
+         {
+            /*height: 100%;
+            width: 100%;*/
+        }
+
+         html,body {
+            min-width: 1366px;
+            width: 100%;
+            height:100%;
+            margin: 0;
+            /*background-color: #d3d3d3;*/
+             overflow: hidden hidden;
+            background-color: #F8F8FF;
+        }
+
+        .app-main {
+            /*height: 300px;*/
+            width: 70%;
+            float: right;
+            min-width: 30%;
+            margin-right: 8.5%;
+            box-sizing: border-box;
+            /*margin-right:10%;*/
+            /*margin: 0 auto;*/
+        }
+        .app-main iframe{
+            /*height: 600px;*/
+            top: 0;
+            left: 0;
+            /*transform-origin: top left;*/
+            /*transform: scale(0.5);*/
+        }
+
+        .app-main .divTmp {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .app {
+            width: 100%;
+            height: 100%;
+
+        }
+
+
+        .logo {
+            width: 70%;
+            height: 120px;
+            margin: 0px 30px 0px 65px;
+            /*border-right:#FAF0E6 solid 7px ;*/
+            border-right:#A9A9A9 solid 3px ;
+            border-left:#A9A9A9 solid 3px ;
+        }
+
+        .el-menu-vertical-demo:not(.el-menu--collapse) {
+            width: 300px;
+            min-height: 400px;
+            margin-left: 28px;
+        }
+
+        el-menu--collapse {
+            width: 300px;
+            height: 100%;
+        }
+        el-menu {
+            border: none;
+            height: 100%;
+            width: 100% !important;
+        }
+         .el-menu-vertical-demo:not(.el-menu--collapse) {
+             width: 200%;
+             min-height: 400px;
+         }
+         .el-dropdown-link {
+             cursor: pointer;
+             color: #409EFF;
+         }
+         .el-icon-arrow-down {
+             font-size: 12px;
+         }
+
+
+        .sidebar-container {
+            /*width: 300px;*/
+            width: 17%;
+            height: 910px;
+            /*height: 100%;*/
+            /*background-color: #343744;*/
+            background-color: #F8F8FF;
+            float: left;
+            /*margin: 100px 200px 200px 500px;*/
+            margin-left:10px;
+            margin-top:0px;
+            /*flex: 1;*/
+            /*display:inline-block;*/
+        }
+
+        .navbar {
+            height: 75px;
+            /*overflow: hidden;
+            position: relative;*/
+            width: 100%;
+            margin-left: 0px;
+            margin-top: 0px;
+            /*float: right;*/
+            background:url("images/bj3.jpg");
+            /*background-color: #FFFFFF;*/
+        }
+
+        .navbar-a {
+            color: #333333;
+            height: 70px;
+            width: 600px;
+            text-align: center;
+            line-height: 75px;
+            float: left;
+
+            margin: 0 0 0 250px;
+        }
+        .navbar-a-1{
+            float: left;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .navbar-a-2{
+            float: right;
+            font-size: 27px;
+            font-weight: bold;
+            font-family: STLiti;
+        }
+        .navbar-a img{
+            width: 35px;
+            height: 35px;
+            margin: 15px 3px 0 0;
+
+        }
+        .navbar-a .goBack{
+            cursor: pointer;
+            /*font-weight: normal;*/
+            border-right:solid 1px;
+            margin-right: 15px;
+            padding-right: 10px;
+
+        }
+        .navbar-c{
+            width: 150px;
+            height: 75px;
+            margin-right: 50px;
+            float: right;
+            text-align: center;
+            line-height: 75px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .navbar-b {
+            height: 75px;
+            width: 600px;
+            text-align: center;
+            line-height: 75px;
+            float: right;
+        }
+
+        .outLogin{
+            margin-top: 20px;
+            margin-left: 10px;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+        }
+
+        .aaa {
+            /*display: inline;*/
+        }
+        .navbar-d{
+            font-family: LiSu;
+            font-size: 18px;
+            color: #70DB93;
+            /*font-weight: lighter;*/
+            margin: 0px 100px 0 0;
+            /*font-weight: lighter;*/
+        }
+        .navbar-e{
+            margin-right: 100px;
+        }
+         .page-component__scroll  {
+             height: 500px;
+         }
+         .el-scrollbar__wrap {
+             overflow: scroll;
+             height: 100%;
+         }
+         html,body {
+             height: 100%;
+         }
+         .el-menu-item {
+             font-size: 23px;
+             color: #303133;
+             padding: 0 20px;
+             cursor: pointer;
+             -webkit-transition: border-color .3s,background-color .3s,color .3s;
+             transition: border-color .3s,background-color .3s,color .3s;
+             box-sizing: border-box;
+             font-family: LiSu;
+         }
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+    <!--    <div class="app-wrapper openSidebar clearfix">-->
+    <!--<el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>-->
+    <div class="main-container">
+
+        <div class="navbar">
+
+
+
+
+            <div class="navbar-a">
+                <div class="navbar-a-1">
+                    <span v-if="goBackFlag" class="goBack" @click="goBack()">
+                   <!-- <img src="images/btn_back@2x.png" alt="" /> -->
+                        (<—返回
+                </span>
+                </div>
+                <div class="navbar-a-2">
+                    <span>{{headTitle}}</span>
+                </div>
+            </div>
+
+
+
+
+            <div class="navbar-b">
+
+                <div class="navbar-c" >
+                    <!--@click="User()"-->
+                    <el-dropdown @command="User">
+                        <!--<span class="el-dropdown-link">
+                            123&lt;!&ndash;<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>&ndash;&gt;
+                        </span>-->
+                        <el-image style="width: 60px; height: 60px; border:none;cursor: pointer;margin-top: 8px;"
+                                  :src="getImage(userInfo.image)">
+                            <!--:preview-src-list="[ `/common/download?name=${userInfo.image}`]"-->
+                            <div slot="error" class="image-slot">
+                                <img src="images/noImg.png"  style="width: auto; height: 40px; border:none;" >
+                            </div>
+                        </el-image>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="a">个人资料</el-dropdown-item>
+                            <el-dropdown-item command="b">退出</el-dropdown-item>
+                            <!--<el-dropdown-item command="b">狮子头</el-dropdown-item>-->
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+                <div class="navbar-d">
+                    <span >{{this.userInfo.name}} ,  欢迎您的登录ヾ(≧▽≦*)o</span>
+
+                </div>
+                <!--<img src="images/btn_close@2x.png" alt="退出" class="outLogin" @click="logout"/>-->
+            </div>
+        </div>
+    </div>
+    <div class="sidebar-container">
+        <!--<div class="logo">
+            <img src="images/xx.jpg" alt="" style="width: 100px; height: 100px"/>
+        </div>-->
+        <div class="logo" ></div>
+
+
+
+        <el-col :span="12">
+            <el-menu
+                    default-active="2"
+                    class="el-menu-vertical-demo"
+
+                    background-color="rgba(255,255,255,0.8)"
+                    text-color="#A9A9A9"
+                    active-text-color="#6495ED" >
+                <!--@open="handleOpen"
+                    @close="handleClose"-->
+                <div v-for="item in menuList":key="item.id">
+
+                <el-menu-item :index="item.id" @click="menuHandle(item,false)">
+                    <i class="el-icon-menu"></i>
+                    <span slot="title">{{item.name}}</span>
+                </el-menu-item>
+
+
+                <!--<el-menu-item index="3" disabled>
+                    <i class="el-icon-document"></i>
+                    <span slot="title">导航三</span>
+                </el-menu-item>
+                <el-menu-item index="4">
+                    <i class="el-icon-setting"></i>
+                    <span slot="title">导航四</span>
+                </el-menu-item>-->
+                </div>
+            </el-menu>
+        </el-col>
+        </el-row>
+        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+            <!--<el-radio-button :label="false">展开</el-radio-button>
+            <el-radio-button :label="true">收起</el-radio-button>-->
+        </el-radio-group>
+    </div>
+
+
+
+    <div class="app-main" v-loading="loading">
+        <!--<el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>-->
+        <div class="divTmp" v-show="loading"></div>
+        <iframe
+                id="cIframe"
+                class="c_iframe"
+                name="cIframe"
+                :src="iframeUrl"
+                width="1400px"
+                height="910px"
+                frameborder="0"
+                v-show="!loading"
+
+        ></iframe>
+
+    </div>
+
+    <input type="hidden" :value="menuActived " id="zhi">
+    <input type="hidden" :value="headTitle " id="zhi2">
+
+</div>
+
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="plugins/axios/axios.min.js"></script>
+<script src="js/request.js"></script>
+<!--<script src="js/validate.js"></script>-->
+<script src="js/login.js"></script>
+<script src="js/module.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                isCollapse: false,
+                defAct: '2',
+                //id
+                menuActived: '2',
+                //用户信息
+                userInfo: {},
+                //地址
+
+                iframeUrl: 'page/forum/homepage.html?id=2',
+                // iframeUrl: 'page/member/list.html',
+                //名字
+                headTitle: '首页',
+
+                goBackFlag: false,
+                loading: false,
+                timer: null,
+                menuName:'',
+                menuList: [
+                    /*{
+                        id: '2',
+                        name: '首页',
+                        url: 'page/forum/homepage.html?id=2',
+                        // url: 'page/member/list.html',
+                        // icon: 'icon-member'
+                    },
+
+
+                    {
+                        id:'4',
+                        name: '校园分享',
+                        url: 'page/forum/forum.html?id=4'
+                    },
+                    {
+                        id:'5',
+                        name: '校园交友',
+                        url: 'page/forum/forum.html?id=5'
+                    },
+                    {
+                        id:'3',
+                        name: '校物集市',
+                        url: 'page/forum/forum.html?id=3'
+                    },
+                    {
+                        id:'6',
+                        name: '学习模块',
+                        url: 'page/forum/forum.html?id=6'
+                    },
+                    {
+                        id:'7',
+                        name: '游戏模块',
+                        url: 'page/forum/forum.html?id=7'
+                    },
+                    {
+                        id:'8',
+                        name: '其他模块',
+                        url: 'page/forum/forum.html?id=8'
+                    },*/
+                    /*{
+                        id:'9',
+                        name: '员工管理',
+                        url: 'page/member/list.html'
+                    },*/
+
+
+                ],
+                show:{}
+            }
+
+        },
+        created() {
+            this.init()
+            const userInfo = window.localStorage.getItem('userInfo')
+            if (userInfo) {
+                this.userInfo = JSON.parse(userInfo)
+            }
+            this.closeLoading()
+        },
+        /*computed(){
+
+        },
+        create(){
+
+        },*/
+        mounted() {
+            window.menuHandle = this.menuHandle;
+            window.show=this.shows
+        },
+
+        methods: {
+            async init() {
+                /*const params = {
+                    page: this.page,
+                    pageSize: this.pageSize,
+                    name: this.input ? this.input : undefined
+                }*/
+                await getModuleList().then(res => {
+                    if (String(res.code) === '1') {
+                        this.menuList = res.data|| []
+                        this.menuList[0]={
+                            id: '2',
+                            name: '首页',
+                            url: 'page/forum/homepage.html?id=2',
+                        }
+                        console.log(this.menuList)
+                        /*this.counts = res.data.total*/
+                    }
+                }).catch(err => {
+                    this.$message.error('请求出错了：' + err)
+                })
+            },
+            getImage(image) {
+                // console.log(image)
+                return `/common/download?name=${image}`
+            },
+            User(command){
+                console.info(command)
+                if (command=="a"){
+                    this.menuHandle({
+                        id: this.menuActived,
+                        url: '/front/page/user/user.html?id='+this.userInfo.id,
+                        name: '个人资料'
+                    },true)
+                    this.goBackFlag=true;
+                }else if (command=="b"){
+                    this.logout();
+                }
+            },
+            logout() {
+                logoutApi().then((res) => {
+                    if (res.code === 1) {
+                        localStorage.removeItem('userInfo'),
+                        window.location.href = '/front/page/login/login.html'
+                    }
+                })
+                // console.log(132)
+
+            },
+            handleOpen(key, keyPath) {
+                // console.log(key, keyPath);
+                // console.log(123)
+            },
+            handleClose(key, keyPath) {
+                // console.log(key, keyPath);
+            },
+            /*goBack() {
+                // window.location.href = 'javascript:history.go(-1)'
+                const menu = this.menuList.find(item=>item.id===this.menuActived)
+                // this.goBackFlag = false
+                // this.headTitle = menu.name
+                this.menuHandle(menu,false)
+            },*/
+            menuHandle(item,goBackFlag){
+                console.info(item)
+                if (!goBackFlag&&item.name!=undefined){
+                    console.info(item.name+"....")
+                    this.menuName=item.name
+                }
+                this.loading = true
+                this.menuActived = item.id
+                if (item.url){
+                    this.iframeUrl = item.url
+                }else {
+                    this.iframeUrl="page/forum/forum.html?id="+item.id
+                }
+                console.info(this.iframeUrl)
+                if (item.name){
+                    this.headTitle = item.name
+                }else {
+                    console.info("---*---")
+                    console.info(this.menuName)
+                    this.headTitle=this.menuName;
+                }
+                this.goBackFlag = goBackFlag
+                this.show=item.data
+                console.info(this.menuActived)
+                this.closeLoading()
+            },
+            shows(callback){
+                callback(this.show);
+            },
+            closeLoading(){
+                this.timer = null
+                this.timer = setTimeout(()=>{
+                    this.loading = false
+                },1000)
+            },
+
+            goBack(){
+                const menu = this.menuList.find(item=>item.id===this.menuActived)
+                console.info(menu)
+                this.menuHandle(menu,false)
+            }
+
+
+        }
+    })
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <title>绿海贴吧</title>
+    <!--引入图标-->
+    <link rel="shortcut icon" href="../../images/xx.jpg">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../../plugins/element-ui/index.css"/>
+    <style>
+        html ,body{
+            width: 95%;
+            height: 100%;
+            /*margin-left: 30px;*/
+        }
+        html{
+            /*border-left: #9a6e3a solid 1px;*/
+        }
+        ul, ol, li {
+            list-style: none;
+        }
+        .ul-app{
+            /*float: right;*/
+            width: 250px;
+            background-color: #FFFFFF;
+        }
+        .topic_item .topic_name {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+            vertical-align: middle;
+            color: #666;
+        }
+        .topic_item {
+            padding: 5px 0;
+            color: #666;
+            cursor: pointer;
+        }
+        .topic_name span {
+            margin-right: 13px;
+
+        }
+        .zi:hover{
+            text-decoration: underline;
+            /*强制文字在一行文本框内*/
+            white-space: nowrap;
+            /*溢出部分文字隐藏*/
+            overflow: hidden;
+            /*溢出部分省略号处理*/
+            text-overflow: ellipsis
+        }
+        .topic_item2{
+            width: 600px;
+            height: auto;
+            margin-top: 10px;
+            padding-bottom: 10px;
+        }
+        .content-b{
+            color: #909399;
+            /*width:600px;*/
+            /*background:yellowgreen;*/
+            display: -webkit-box;  /*  display: -webkit-box; 必须结合的属性 ，将对象作为弹性伸缩盒子模型显示  */
+            -webkit-box-orient: vertical; /*  -webkit-box-orient 必须结合的属性 ，设置或检索伸缩盒对象的子元素的排列方式  */
+            -webkit-line-clamp: 2; /*  -webkit-line-clamp用来限制在一个块元素显示的文本的行数 */
+            overflow: hidden;
+            font-size: 15px;
+            font-weight: lighter;
+
+        }
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+        .clearfix {
+            color: #2d64b3;
+            cursor: pointer;
+            height: 30px;
+            /*line-height: 10px*/
+            font-size: 20px;
+            /*font-weight: bold;*/
+            margin-bottom: 15px;
+            font-weight: lighter;
+            text-decoration: none;
+
+        }
+        .ul-b{
+            height: auto;
+            margin-bottom: 100px;
+        }
+        .fine{
+            background-color: #FFFFFF;
+            width: 800px;
+            margin-top: 50px;
+        }
+
+        .el-carousel__item h3 {
+            color: #475669;
+            font-size: 14px;
+            opacity: 0.75;
+            line-height: 300px;
+            margin: 0;
+        }
+        element.style {
+            height: 300px;
+        }
+
+        .el-carousel__item:nth-child(2n) {
+            background-color: #99a9bf;
+        }
+
+        .el-carousel__item:nth-child(2n+1) {
+            background-color: #d3dce6;
+        }
+
+        .ZMD{
+            width: 1150px;
+        }
+        tbody{
+            height: 300px;
+            width: 300px;
+            /*float: right;*/
+        }
+        td{
+            height: 30px;
+        }
+        th{
+            display: table-cell;
+            vertical-align: inherit;
+            font-weight: bold;
+            width: 30px;
+        }
+        .el-calendar-table {
+            /* table-layout: fixed; */
+            width: 100%;
+        }
+        .el-calendar__body {
+            /* padding: 12px 20px 35px; */
+        }
+        .el-calendar {
+            background-color: #fff;
+            width: 330px;
+            float: right;
+            height: 410px;
+        }
+        .el-calendar-table .el-calendar-day {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 8px;
+            height: 40px;
+            text-align: center;
+            line-height: 25px;
+            /* height: 85px; */
+        }
+        .el-calendar__header {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            /* padding: 12px 20px; */
+            border-bottom: 1px solid #EBEEF5;
+        }
+        .cale{
+            margin-top: 50px;
+            width: 330px;
+            float: right;
+            margin-right: 108px;
+
+        }
+        .UL{
+            background-color: #FFFFFF;
+            margin-top: 420px;
+            /*width: 240px;*/
+            padding-bottom: 1px;
+        }
+        .imgS{
+            width: 570px;
+            height: 200px;
+
+        }
+        .time {
+            font-size: 3px;
+            color: #909399;
+            margin-top: 10px;
+        }
+        .fine-p{
+            text-align: center;
+            font-family: KaiTi;
+            font-size: 23px ;
+            color: #cf9236;
+            background-color: cornsilk ;
+            height: 45px;
+            line-height: 45px;
+
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+
+
+
+
+<div id="homepage-app" class="homepage-app">
+
+
+
+    <div class="ZMD">
+        <template>
+            <el-carousel :interval="4000" type="card" height="200px" interval:5000 trigger="click">
+                <el-carousel-item v-for="item in imgList" :key="item">
+                    <h3 class="medium">
+                        <!--<span>6666</span>-->
+                        <!--<img src='{{item}}' class="imgS">-->
+                        <el-image class="imgS"
+                                  :src=item>
+<!--                            :preview-src-list=item-->
+                            <div slot="error" class="image-slot">
+                                <!--<img src="./../../images/noImg.png"  style="width: auto; height: 40px; border:none;" >-->
+                            </div>
+                        </el-image>
+                    </h3>
+                </el-carousel-item>
+            </el-carousel>
+        </template>
+
+    </div>
+
+    <div class="cale">
+    <el-calendar v-model="value">
+    </el-calendar>
+
+    <div class="UL">
+        <p style="text-align: center;font-family: KaiTi;font-size: 20px; background-color: cornsilk;">热议榜</p><!--background-color: beige;-->
+    <ul class="ul-app">
+        <li v-for="(module,index) in moduleList" class="topic_item" >
+            <a @click="show(module.id)" class="topic_name"><span>{{index+1}}  </span><span class="zi"> {{module.name}}</span> </a>
+
+        </li>
+    </ul>
+
+    </div>
+    </div>
+
+
+    <div class="fine">
+        <p class="fine-p">热门帖子</p>
+    <ul class="ul-b" >
+        <li v-for="(Fine,index) in FineList" class="topic_item2" >
+
+                <div class="clearfix" @click="show(Fine.id)">{{Fine.name}}</div>
+                <div class="content-b" >{{Fine.content}}</div>
+                <div v-if="Fine.image"class="">
+                    <el-image style="width: auto; height: 100px; border:none;cursor: pointer;"
+                              :src="getImage(Fine.image)"
+                              :preview-src-list="[ `/common/download?name=${Fine.image}`]" >
+                        <div slot="error" class="image-slot">
+                        </div>
+                    </el-image>
+                </div>
+                <div class="time">
+                    <i class="el-icon-user"></i>
+                    <!--<span>{{Fine.createUser}}</span>-->
+                    <el-button style="color:#909399; padding: 3px 0" type="text" @click="User(Fine.employeeId)">{{Fine.createUser}}</el-button>
+                    <i class="el-icon-time"></i>
+                    <span>{{Fine.createTime}}</span>
+                </div>
+        </li>
+    </ul>
+        <div style="width: 10px;height: 10px"></div>
+    </div>
+
+
+
+
+
+
+
+
+</div>
+
+
+<!--开发环境版本，包含了有帮助的命令行警告-->
+<script src="../../plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="../../plugins/axios/axios.min.js"></script>
+<script src="../../js/request.js"></script>
+<script src="../../js/module.js"></script>
+<script src="../../js/forum.js"></script>
+
+
+<script>
+    new Vue({
+        el:"#homepage-app",
+        data(){
+            return{
+                moduleList:[],
+                FineList:[],
+                value: new Date(),
+                imgList:[
+                    '../../images/img_1.png',
+                    '../../images/img_2.png',
+                    '../../images/img_3.png',
+                    '../../images/img_4.png'
+                ]
+
+            }
+        },
+        created(){
+            this.init1();
+            this.init2();
+        },
+        methods:{
+            getImage(image) {
+                // console.log(image)
+                return `/common/download?name=${image}`
+            },
+            async init1(){
+                await getPostHeatList().then(res => {
+                    if (String(res.code) === '1') {
+                        this.moduleList = res.data|| [];
+                    }else {
+                        this.$message.error('请求出错了：' + res.msg)
+                    }
+                })
+            },
+
+            async init2(){
+                await getPostFineList().then(res => {
+                    if (String(res.code) === '1') {
+                        this.FineList = res.data|| [];
+                    }else {
+                        this.$message.error('请求出错了：' + res.msg)
+                    }
+                })
+            },
+            show(data){
+                window.parent.menuHandle({
+                    id: '2',
+                    url: '/front/page/forum/show.html?id='+data,
+                    name: '详细信息',
+                    // name:data.name,
+                    /*data: data*/
+                }, true)
+
+            },
+            User(id){
+                window.parent.menuHandle({
+                    id: '2',
+                    url: '/front/page/user/user.html?id='+id,
+                    name: '个人资料'
+                },true)
+            },
+
+        }
+    })
+
+</script>
+
+
+</body>
+</html>

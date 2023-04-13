@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!--引入图标-->
+    <link rel="shortcut icon" href="../../images/xx.jpg">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../../../front/plugins/element-ui/index.css"/>
+    <link rel="stylesheet" href="../../../front/styles/common.css"/>
+<!--    <link rel="stylesheet" href="../../../front/styles/page.css"/>-->
+    <style>
+        html,body{
+            overflow: auto;
+            /*max-height: 1100px;*/
+            width: 100%;
+            height: 800px;
+            min-height: 500px;
+
+            max-height: 1500px;
+            /*display: inline-block;*/
+            margin: 0;
+        }
+        .posts-app{
+            padding: 20px;
+        }
+        .tableBar{
+            /*display: flex;*/
+            margin-bottom: 20px;
+            justify-content: space-between;
+        }
+
+        .container {
+            background-color: #FFFFFF;
+            position: relative;
+            z-index: 1;
+            padding: 30px 28px;
+            border-radius: 4px;
+        }
+        .tableLab{
+            float: right;
+        }
+        .el-message-box {
+            margin-bottom: 700px;
+        }
+        .tableLab .span-btn {
+            cursor: pointer;
+            display: inline-block;
+            font-size: 14px;
+            padding: 0 20px;
+            color: #818693;
+            border-right: solid 1px #d8dde3;
+        }
+        .tableBox {
+            width: 100%;
+            border: solid 2px #f3f4f7;
+            border-radius: 2px;
+
+        }
+        .el-image-viewer__img{
+            width: auto;
+            height:35%;
+            margin-bottom: 500px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="posts-app" class="posts-app">
+    <div class="container">
+        <div class="tableBar">
+            <el-input
+                    v-model="input"
+                    placeholder="请输入帖子标题"
+                    style="width: 250px"
+                    clearable
+            >
+                <i
+                        slot="prefix"
+                        class="el-input__icon el-icon-search"
+                        style="cursor: pointer"
+                ></i>
+
+            </el-input>
+
+                <el-select
+                        v-model="fine"
+                        placeholder="是否加精"
+                >
+                    <!--<el-option v-for="(item,index) in dishList" :key="index" :label="item.name" :value="item.id" />-->
+                    <el-option label="加精" :value="1"></el-option>
+                    <el-option label="未加精" :value="0"></el-option>
+                </el-select>
+            <el-date-picker v-model="orderTime"
+                            clearable
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            type="datetimerange"
+                            placeholder="选择日期"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :default-time="['00:00:00', '23:59:59']"
+                            style="width: 400px;margin-left: 20px;"
+            ></el-date-picker>
+            <el-button type="primary" round @click="handleQuery()">查询</el-button>
+
+            <div class="tableLab">
+            <span class="span-btn blueBug non" @click="statusHandle('1')">批量解封</span>
+            <span
+                    style="border:none;"
+                    class="span-btn delBut non"
+                    @click="statusHandle('0')"
+            >批量封禁</span>
+            </div>
+        </div>
+
+        <el-table
+                :data="tableData"
+                stripe
+                class="tableBox"
+                @selection-change="handleSelectionChange"
+        >
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="帖子标题">
+                            <span>{{ props.row.name }}</span>
+                        </el-form-item>
+                        </br>
+                        <el-form-item label="帖子内容">
+                            <span>{{ props.row.content }}</span>
+                        </el-form-item>
+                        </br>
+                        <el-form-item label="模块名称">
+                            <span>{{ props.row.moduleName }}</span>
+                        </el-form-item>
+                        </br>
+                        <el-form-item label="分类名称">
+                            <span>{{ props.row.classifyName }}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    type="selection"
+                    width="25"
+            ></el-table-column>
+
+            <el-table-column
+                    prop="name"
+                    label="帖子标题"
+            ></el-table-column>
+
+            <el-table-column prop="image" label="图片"  align="center">
+                <template slot-scope="{ row }">
+                    <el-image style="width: auto; height: 40px; border:none;cursor: pointer;" :src="getImage(row.image)" :preview-src-list="[ `/common/download?name=${row.image}` ]" >
+                        <div slot="error" class="image-slot">
+                            <img src="./../../images/noImg.png"  style="width: auto; height: 40px; border:none;" >
+                        </div>
+                    </el-image>
+                </template>
+            </el-table-column>
+
+            <el-table-column
+                    label="帖子状态"
+
+            >
+                <!--:filters="[{text:'启用',value:'1'},{text:'封禁',value:'0'}]"
+                    :filter-method="filterHandler"-->
+                <template slot-scope="scope">
+                    <span>{{ scope.row.status == '0' ? '封禁' : '启用' }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="是否加精"
+            >
+                <!--:filters="[{text:'加精',value:'1'},{text:'未加',value:'0'}]"
+                    :filter-method="filterHandlers"-->
+                <template slot-scope="scope">
+                    <span>{{ scope.row.fine == '0' ? '未加' : '加精' }}</span>
+                </template>
+            </el-table-column>
+
+            <el-table-column
+                    label="操作"
+                    width="160"
+                    align="center"
+            >
+                <template slot-scope="scope">
+
+                <el-button
+                        type="text"
+                        size="small"
+                        class="blueBug"
+                        @click="statusHandle(scope.row)"
+                >
+                    {{ scope.row.status == '0' ? '启用' : '封禁' }}
+                </el-button>
+                    <el-button
+                            type="text"
+                            size="small"
+                            class="blueBug"
+                            @click="fineHandle(scope.row)"
+                    >
+                        {{ scope.row.fine == '0' ? '加精' : '取消加精' }}
+                    </el-button>
+
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination
+                class="pageList"
+                :page-sizes="[5,10,15,20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="counts"
+                :current-page.sync="page"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+        ></el-pagination>
+    </div>
+
+
+</div>
+
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="../../../front/plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../../front/plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="../../../front/plugins/axios/axios.min.js"></script>
+<script src="../../js/request.js"></script>
+<script src="../../js/posts.js"></script>
+
+
+<script>
+    new Vue({
+        el:'#posts-app',
+        data(){
+            return{
+                input: '',
+                counts: 0,
+                page: 1,
+                pageSize: 5,
+                tableData : [],
+                dishState : '',
+                checkList: [],
+                fine:'',
+                orderTime:'',
+                beginTime:'',
+                endTime:'',
+
+            }
+        },
+        created() {
+            this.init()
+        },
+        watch:{
+            orderTime (val) {
+                if (val && val.length >= 2) {
+                    this.beginTime = val[0]
+                    this.endTime = val[1]
+                } else {
+                    this.beginTime = ''
+                    this.endTime = ''
+                }
+            }
+        },
+        methods:{
+
+            async init () {
+                const params = {
+                    page: this.page,
+                    pageSize: this.pageSize,
+                    name: this.input ? this.input : undefined,
+                    fine:this.fine?this.fine:undefined,
+                    beginTime: this.beginTime?this.beginTime:undefined,
+                    endTime: this.endTime?this.endTime:undefined
+                }
+                await getPostslPage(params).then(res => {
+                    if (String(res.code) === '1') {
+                        this.tableData = res.data.records || []
+                        this.counts = res.data.total
+                    }
+                }).catch(err => {
+                    this.$message.error('请求出错了：' + err)
+                })
+            },
+
+
+            statusHandle (row) {
+                let params = {}
+                if (typeof row === 'string' ){
+                    if (this.checkList.length == 0){
+                        this.$message.error('批量操作，请先勾选操作帖子！')
+                        return false
+                    }
+                    params.ids = this.checkList.join(',')
+                    params.status = row
+                } else {
+                    params.ids = row.id
+                    params.status = row.status ? '0' : '1'
+                }
+
+                this.$confirm('确认更改该帖子状态?', '提示', {
+                    'confirmButtonText': '确定',
+                    'cancelButtonText': '取消',
+                    'type': 'warning'
+                }).then(() => {
+                    // 起售停售---批量起售停售接口
+                    setmealStatusByStatus(params).then(res => {
+                        if (res.code === 1) {
+                            this.$message.success('帖子状态已经更改成功！')
+                            this.handleQuery()
+                        } else {
+                            this.$message.error(res.msg || '操作失败')
+                        }
+                    }).catch(err => {
+                        this.$message.error('请求出错了：' + err)
+                    })
+                })
+            },
+            fineHandle(row){
+                let params = {}
+                params.ids = row.id
+                params.fine = row.fine ? '0' : '1'
+                this.$confirm('确认更改该帖子状态?', '提示', {
+                    'confirmButtonText': '确定',
+                    'cancelButtonText': '取消',
+                    'type': 'warning'
+                }).then(() => {
+                    // 起售停售---批量起售停售接口
+                    setmealStatusByFine(params).then(res => {
+                        if (res.code === 1) {
+                            this.$message.success('帖子状态已经更改成功！')
+                            this.handleQuery()
+                        } else {
+                            this.$message.error(res.msg || '操作失败')
+                        }
+                    }).catch(err => {
+                        this.$message.error('请求出错了：' + err)
+                    })
+                })
+
+
+            },
+            handleQuery(){
+                this.page = 1;
+                this.init();
+            },
+            getImage (image) {
+                return `/common/download?name=${image}`
+            },
+            // 全部操作
+            handleSelectionChange (val){
+                let checkArr = []
+                val.forEach((n) => {
+                    checkArr.push(n.id)
+                })
+                this.checkList = checkArr
+            },
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.init()
+            },
+            handleCurrentChange (val) {
+                this.page = val
+                this.init()
+            },
+            filterHandler(value, row, column) {
+                console.log(column);
+                console.log(value);
+                console.log(row);
+                return row.status == value;
+            },
+            filterHandlers(value, row, column) {
+                console.log(column);
+                console.log(value);
+                console.log(row);
+                return row.fine == value;
+            }
+        }
+
+    })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绿海贴吧</title>
+    <!--引入图标-->
+    <link rel="shortcut icon" href="../../images/xx.jpg">
+    <link rel="stylesheet" href="../../plugins/element-ui/index.css"/>
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 78px;
+            height: 78px;
+            line-height: 78px;
+            text-align: center;
+        }
+        .avatar {
+            background-color: #FFFFFF;
+            width: 78px;
+            height: 78px;
+            display: block;
+        }
+        .el-textarea__inner {
+            height: 350px;
+        }
+        img{
+            width: 50px;
+            height: 50px;
+        }
+        pre{
+            font-family: auto;
+            white-space: pre-wrap;
+        }
+        .el-input {
+            position: relative;
+            font-size: 14px;
+            display: inline-block;
+            width: 100%;
+            margin-top: 25px;
+        }
+        .item{
+            height: 350px;
+            width: 1200px;
+        }
+        .avatar-uploader{
+            float: right;
+            /*margin-bottom: 10px;*/
+            margin-top: 20px;
+        }
+        .el-icon-picture{
+            width: 100px;
+            height: 80px;
+        }
+        .el-form-item__content {
+            line-height: 40px;
+            position: relative;
+            font-size: 14px;
+            /* width: 200px; */
+            margin-right: 120px;
+        }
+        .el-form-item__label {
+            text-align: right;
+            vertical-align: middle;
+            float: left;
+            font-size: 14px;
+            color: #606266;
+            /* line-height: 115px; */
+            padding: 8px 12px 0 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin-top: 35px;
+        }
+        .el-select {
+            display: inline-block;
+            position: relative;
+            margin-top: 20px;
+        }
+        element.style {
+            width: 80px;
+            /* margin-left: 120px; */
+            margin-top: 30px;
+            /*font-weight: 90px;*/
+        }
+        .BT{
+            width: 1200px;
+        }
+        .FL{
+            /*margin-right: 300px;*/
+            float: right;
+            /*margin-top: 30px;*/
+            color: black;
+        }
+        .QY{
+            width: 600px;
+        }
+        .Tp{
+            /*float: right;*/
+            width: 300px;
+            margin-top: 50px;
+            margin-right: 50px;
+        }
+        .add-app-a{
+            background-color: #FFFFFF;
+            margin-top: 30px;
+            width: 85%;
+            height: 730px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="add-app">
+    <div class="add-app-a">
+    <el-form
+            ref="Form"
+            :model="Form"
+            :inline="true"
+            label-width="180px"
+            class="demo-ruleForm"
+    >
+
+
+    </el-form>
+
+
+
+    <el-form ref="form" :model="Form" label-width="80px" label-width="180px">
+
+
+
+        <el-form-item label="标题" class="BT">
+            <pre ><el-input v-model="Form.name" placeholder="标题不能为空哦~(最多可输入40字)"></el-input></pre>
+        </el-form-item>
+
+
+        <div class="item">
+        <el-form-item label="内容">
+            <pre>
+                <el-input type="textarea" v-model="Form.content" placeholder="赶快编写你的内容吧~(最多可输入350字)">
+                <!--<img v-if="imageUrl" :src="imageUrl" class="avatar">-->
+            </el-input>
+
+            </pre>
+        </el-form-item>
+        </div>
+
+            <div class="QY" >
+                <el-form-item
+                        label="帖子分类"
+                        prop="categoryId"
+                        class="FL" >
+                    <el-select
+                            v-model="Form.classifyId"
+                            placeholder="未选择">
+                        <el-option v-for="(item,index) in classifyLists" :key="index" :label="item.name" :value="item.id" />
+                    </el-select>
+                </el-form-item>
+
+                <div class="Tp">
+                <el-form-item prop="region" class="uploadImg" label="图片">
+                    <el-upload
+                    class="avatar-uploader"
+                    action="/common/upload"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess"
+                    :on-change="onChange"
+                    ref="upload">
+
+                <!--<i
+                        v-else
+                        class="el-icon-plus avatar-uploader-icon"
+                ></i>-->
+                <img v-if="Form.image" :src="getImage(Form.image)" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+                </el-form-item>
+                </div>
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+        <!--<el-dialog :visible.sync="dialogVisible">
+            <el-image style="width: 60px; height: 60px; border:none;cursor: pointer;margin-top: 8px"
+                      :src="getImage(Form.image)">
+                &lt;!&ndash;:preview-src-list="[ `/common/download?name=${userInfo.image}`]"&ndash;&gt;
+                <div slot="error" class="image-slot">
+                    <img src="images/noImg.png"  style="width: auto; height: 40px; border:none;" >
+                </div>
+            </el-image>
+            &lt;!&ndash;<img width="100%" :src="getImage(Form.img)" alt="">&ndash;&gt;
+        </el-dialog>-->
+
+
+        <el-form-item>
+            <el-button type="primary" @click="Submit">提交</el-button>
+            <!--<el-button>取消</el-button>-->
+        </el-form-item>
+    </el-form>
+    </div>
+
+
+</div>
+
+<!--开发环境版本，包含了有帮助的命令行警告-->
+<script src="../../plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="../../plugins/axios/axios.min.js"></script>
+
+<script src="../../js/request.js"></script>
+<script src="../../js/forum.js"></script>
+<script src="../../js/index.js"></script>
+<script src="../../js/classify.js"></script>
+
+<script>
+    new Vue({
+        el: "#add-app",
+        data() {
+            return {
+                id: '',
+                actionType: '',
+                aa:0,
+                imageUrl:'',
+
+                Form: {
+                    id: '',
+                    name: '',
+                    content: '',
+                    employeeId: '',
+                    img:'',
+                    image:'',
+                    classifyId:''
+                },
+                dialogImageUrl: '',
+                image:[],
+                dialogVisible: false,
+                disabled: false,
+                menuId:'',
+                menuId2:'',
+                menuName:'',
+                classifyLists:[],
+            }
+
+        },
+        created() {
+            // console.info(1111111111111)
+            let menuId2 = window.parent.document.getElementById("zhi2").value;
+            console.info(menuId2)
+
+            let menuId = window.parent.document.getElementById("zhi").value;
+            // console.info(menuId)
+            this.menuId=menuId;
+            this.menuId2=menuId;
+            this.id = requestUrlParam('id')
+            this.actionType = this.id ? 'edit' : 'add'
+
+            if (this.id) {
+
+                this.init()
+
+            }else {
+                this.ClassifyList();
+            }
+
+
+        },
+
+        methods: {
+            async ClassifyList(){
+                console.log("-----------")
+                console.log(this.menuId)
+                await getClassifyList(this.menuId).then(res => {
+                    if (res.code === 1) {
+                        this.classifyLists = res.data
+                    } else {
+                        this.$message.error(res.msg || '操作失败')
+                    }
+                })
+            },
+            getImage(image) {
+                console.log(image)
+                return `/common/download?name=${image}`
+            },
+
+            onChange (file) {
+                if(file){
+                    const suffix = file.name.split('.')[1]
+                    const size = file.size / 1024 / 1024 < 2
+                    if(['png','jpeg','jpg'].indexOf(suffix) < 0){
+                        this.$message.error('上传图片只支持 png、jpeg、jpg 格式！')
+                        this.$refs.upload.clearFiles()
+                        return false
+                    }
+                    if(!size){
+                        this.$message.error('上传文件大小不能超过 2MB!')
+                        return false
+                    }
+                    // this.Form.img=file.name
+                    return file
+                }
+            },
+
+            handleAvatarSuccess (response, file, fileList) {
+                console.info(123)
+                // 拼接down接口预览
+                if(response.code === 0 && response.msg === '未登录'){
+                    window.top.location.href = '../../page/login/login.html'
+                }else{
+                    this.imageUrl = `/common/download?name=${response.data}`
+                    this.Form.image = response.data
+                }
+            },
+
+
+            async Submit() {
+                console.info(this.imageUrl)
+                /*let menuId = window.parent.document.getElementById("zhi").value;
+
+                this.menuId=menuId;*/
+                if (this.actionType === 'add') {
+
+                    /*console.info(menuId);*/
+                    var form = {
+                        name: this.Form.name,
+                        content: this.Form.content,
+                        image:this.Form.image,
+                        moduleId:this.menuId,
+                        classifyId:this.Form.classifyId
+                    }
+                    console.info(form)
+                    if (form.name.length===0){
+                        this.$message.error('请输入标题' )
+                        return;
+                    }else if (form.content.length===0) {
+                        this.$message.error('请输入内容')
+                        return;
+                    }else if(form.content.length>350){
+                        this.$message.error('内容最多可以输入350字')
+                        return;
+                    }else if(form.name.length>=40){
+                        this.$message.error('标题最多可以输入40字')
+                        return;
+                    }
+
+                    await addPost(form).then(res => {
+                        if (String(res.code) === '1') {
+                            // console.log("添加成功")
+                            this.$message.success('帖子添加成功！')
+                            this.goBack();
+                            // window.parent.location.reload();
+                        } else {
+                            this.$message.error(res.msg || '操作失败')
+                        }
+                    }).catch(err => {
+                        this.$message.error('请求出错了：' + err)
+                    })
+
+                } else {
+                    var form = {
+                        id: this.Form.id,
+                        name: this.Form.name,
+                        content: this.Form.content,
+                        employeeId: this.Form.employeeId,
+                        image:this.Form.image,
+                        classifyId:this.Form.classifyId
+                    }
+                    if (form.name.length===0){
+                        this.$message.error('请输入标题' )
+                        return;
+                    }else if (form.content.length===0) {
+                        this.$message.error('请输入内容')
+                        return;
+                    }else if(form.content.length>350){
+                        this.$message.error('内容最多可以输入350字')
+                        return;
+                    }else if(form.name.length>=40){
+                        this.$message.error('标题最多可以输入40字')
+                        return;
+                    }
+                    await updatePost(form).then(res => {
+                        if (res.code === 1) {
+                            this.$message.success('帖子信息修改成功！')
+                            // window.parent.location.reload();
+
+                            this.goBack()
+                        } else {
+                            this.$message.error(res.msg || '操作失败')
+                        }
+                    }).catch(err => {
+                        this.$message.error('请求出错了：' + err)
+                    })
+
+                }
+
+
+            },
+
+            goBack() {
+                if (this.menuId2==2){
+                    window.parent.menuHandle({
+                        id: 2,
+                        url: 'page/forum/homepage.html?id=2',
+                    }, false)
+                }else {
+
+                    window.parent.menuHandle({
+                        id: this.menuId,
+                        url: '/front/page/forum/forum.html?id=' + this.menuId,
+                        /*name: this.menuName*/
+                    }, false)
+                }
+            },
+            async init() {
+                queryPostsById(this.id).then(res => {
+                    console.log(res)
+                    if (String(res.code) === '1') {
+                        this.Form = res.data
+                        console.log("*-*-*-*-*-*")
+                        console.log(res.data.moduleId)
+                        this.menuId=res.data.moduleId
+                        this.ClassifyList();
+                    } else {
+                        this.$message.error(res.msg || '操作失败')
+                    }
+                })
+            },
+
+        }
+    })
+
+
+</script>
+
+</body>
+</html>
